@@ -27,8 +27,9 @@ func getHash(filePath string) ([]byte, error) {
 }
 
 func fileVisited(path string, f os.FileInfo, err error) error {
+	fmt.Printf("%s calculating hash: ", path)
 	hash, _ := getHash(path)
-	fmt.Printf("Visited %s hash: %x\n", path, hash)
+	fmt.Printf("%x\n", hash)
 	return nil
 }
 
