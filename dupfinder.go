@@ -1,4 +1,4 @@
-package main
+package dupfinder
 
 import (
 	"crypto/md5"
@@ -9,6 +9,8 @@ import (
 	"os"
 	"path/filepath"
 )
+
+var files = make(map[[md5.Size]byte]string)
 
 func getHash(filePath string) ([]byte, error) {
 	var result []byte
@@ -22,14 +24,13 @@ func getHash(filePath string) ([]byte, error) {
 	if _, err := io.Copy(hash, file); err != nil {
 		return result, err
 	}
-
 	return hash.Sum(result), nil
 }
 
 func fileVisited(path string, f os.FileInfo, err error) error {
 	fmt.Printf("%s calculating hash: ", path)
 	hash, _ := getHash(path)
-	fmt.Printf("%x\n", hash)
+	fmt.Printf("%x", hash)
 	return nil
 }
 
