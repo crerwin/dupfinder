@@ -34,6 +34,13 @@ func getHash(filePath string) ([]byte, error) {
 }
 
 func fileVisited(path string, f os.FileInfo, err error) error {
+	if err != nil {
+		log.Print(err)
+		return nil
+	}
+	if f.IsDir() {
+		return nil
+	}
 	fmt.Printf("%s calculating hash: ", path)
 	hash, _ := getHash(path)
 	fmt.Printf("%x\n", hash)
