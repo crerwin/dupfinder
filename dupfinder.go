@@ -1,7 +1,7 @@
 package main
 
 import (
-	"crypto/md5"
+	"crypto/sha256"
 	"flag"
 	"fmt"
 	"io"
@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 )
 
-var files = make(map[[md5.Size]byte]string)
+var files = make(map[[sha256.Size]byte]string)
 
 func main() {
 	flag.Parse()
@@ -26,7 +26,7 @@ func getHash(filePath string) ([]byte, error) {
 	}
 	defer file.Close()
 
-	hash := md5.New()
+	hash := sha256.New()
 	if _, err := io.Copy(hash, file); err != nil {
 		return result, err
 	}
@@ -44,7 +44,7 @@ func fileVisited(path string, f os.FileInfo, err error) error {
 	fmt.Printf("%s calculating hash: ", path)
 	hash, _ := getHash(path)
 	fmt.Printf("%x\n", hash)
-	var hashArray [md5.Size]byte
+	var hashArray [sha256.Size]byte
 	copy(hashArray[:], hash)
 	if p, ok := files[hashArray]; ok {
 		fmt.Printf("%q is a duplicate of %q\n", path, p)
