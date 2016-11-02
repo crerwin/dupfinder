@@ -1,4 +1,4 @@
-package dupfinder
+package main
 
 import (
 	"crypto/md5"
@@ -11,6 +11,12 @@ import (
 )
 
 var files = make(map[[md5.Size]byte]string)
+
+func main() {
+	flag.Parse()
+	path := flag.Arg(0)
+	inventoryFilesByName(path)
+}
 
 func getHash(filePath string) ([]byte, error) {
 	var result []byte
@@ -30,7 +36,14 @@ func getHash(filePath string) ([]byte, error) {
 func fileVisited(path string, f os.FileInfo, err error) error {
 	fmt.Printf("%s calculating hash: ", path)
 	hash, _ := getHash(path)
-	fmt.Printf("%x", hash)
+	fmt.Printf("%x\n", hash)
+	var hashArray [md5.Size]byte
+	copy(hashArray[:], hash)
+	if p, ok := files[hashArray]; ok {
+		fmt.Printf("%q is a duplicate of %q\n", path, p)
+	} else {
+		files[hashArray] = path
+	}
 	return nil
 }
 
@@ -40,10 +53,4 @@ func inventoryFilesByName(path string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func main() {
-	flag.Parse()
-	path := flag.Arg(0)
-	inventoryFilesByName(path)
 }
