@@ -10,12 +10,17 @@ import (
 	"path/filepath"
 )
 
-var files = make(map[[sha256.Size]byte]string)
+var filesByHash = make(map[[sha256.Size]byte]string)
 
 func main() {
-	flag.Parse()
-	path := flag.Arg(0)
-	inventoryFilesByName(path)
+	if len(os.Args) != 2 {
+		println("invalid arguments.  Must specify one folder.")
+	} else {
+		flag.Parse()
+		path := flag.Arg(0)
+		fmt.Println(len(os.Args), os.Args)
+		inventoryFilesByName(path)
+	}
 }
 
 func getHash(filePath string) ([]byte, error) {
@@ -46,10 +51,10 @@ func fileVisited(path string, f os.FileInfo, err error) error {
 	fmt.Printf("%x\n", hash)
 	var hashArray [sha256.Size]byte
 	copy(hashArray[:], hash)
-	if p, ok := files[hashArray]; ok {
+	if p, ok := filesByHash[hashArray]; ok {
 		fmt.Printf("%q is a duplicate of %q\n", path, p)
 	} else {
-		files[hashArray] = path
+		filesByHash[hashArray] = path
 	}
 	return nil
 }
