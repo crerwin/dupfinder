@@ -9,8 +9,7 @@ import (
 	"path/filepath"
 )
 
-var filesByName = make(map[string]string)
-var filesByHash = make(map[[sha256.Size]byte]string)
+var fileCollection = NewFileCollection()
 
 func FindDups(path string) {
 	// exposed function
@@ -35,17 +34,30 @@ func fileVisited(path string, info os.FileInfo, err error) error {
 	if info.IsDir() {
 		return nil
 	}
-	fmt.Printf("%s calculating hash: ", path)
-	hash, _ := getHash(path)
-	fmt.Printf("%x\n", hash)
-	var hashArray [sha256.Size]byte
-	copy(hashArray[:], hash)
-	if p, ok := filesByHash[hashArray]; ok {
-		fmt.Printf("%q is a duplicate of %q\n", info.Name(), p)
-	} else {
-		filesByHash[hashArray] = path
+
+	if CheckName(fileCollection, path, info.Name()) {
+		fmt.Println(path, " is a possible duplicate.")
 	}
+
 	return nil
+
+	// if p, ok := fileCollection.filesByName[info.Name()]; ok {
+	// 	fmt.Println(path, " is a possible duplicate of ", p)
+	// } else {
+	// 	fileCollection.filesByName[info.Name()] = path
+	// }
+	// return nil
+	// fmt.Printf("%s calculating hash: ", path)
+	// hash, _ := getHash(path)
+	// fmt.Printf("%x\n", hash)
+	// var hashArray [sha256.Size]byte
+	// copy(hashArray[:], hash)
+	// if p, ok := filesByHash[hashArray]; ok {
+	// 	fmt.Printf("%q is a duplicate of %q\n", info.Name(), p)
+	// } else {
+	// 	filesByHash[hashArray] = path
+	// }
+	// return nil
 }
 
 func hashPossibleDups() {
