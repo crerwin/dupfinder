@@ -9,13 +9,17 @@ import (
 	"path/filepath"
 )
 
+var filesByName = make(map[string]string)
 var filesByHash = make(map[[sha256.Size]byte]string)
 
 func FindDups(path string) {
+	// exposed function
 	inventoryFilesByName(path)
 }
 
 func inventoryFilesByName(path string) {
+	// walk recursively from the given path,
+	// executing fileVisited for each file found
 	fmt.Println("Inventorying files in " + path)
 	err := filepath.Walk(path, fileVisited)
 	if err != nil {
@@ -23,12 +27,12 @@ func inventoryFilesByName(path string) {
 	}
 }
 
-func fileVisited(path string, f os.FileInfo, err error) error {
+func fileVisited(path string, info os.FileInfo, err error) error {
 	if err != nil {
 		log.Print(err)
 		return nil
 	}
-	if f.IsDir() {
+	if info.IsDir() {
 		return nil
 	}
 	fmt.Printf("%s calculating hash: ", path)
@@ -37,11 +41,15 @@ func fileVisited(path string, f os.FileInfo, err error) error {
 	var hashArray [sha256.Size]byte
 	copy(hashArray[:], hash)
 	if p, ok := filesByHash[hashArray]; ok {
-		fmt.Printf("%q is a duplicate of %q\n", path, p)
+		fmt.Printf("%q is a duplicate of %q\n", info.Name(), p)
 	} else {
 		filesByHash[hashArray] = path
 	}
 	return nil
+}
+
+func hashPossibleDups() {
+
 }
 
 func getHash(filePath string) ([]byte, error) {
