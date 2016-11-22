@@ -4,10 +4,11 @@ import (
 	"crypto/sha256"
 	"flag"
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/crerwin/dupfinder/duptools"
 )
 
 var filesByHash = make(map[[sha256.Size]byte]string)
@@ -23,21 +24,6 @@ func main() {
 	}
 }
 
-func getHash(filePath string) ([]byte, error) {
-	var result []byte
-	file, err := os.Open(filePath)
-	if err != nil {
-		return result, err
-	}
-	defer file.Close()
-
-	hash := sha256.New()
-	if _, err := io.Copy(hash, file); err != nil {
-		return result, err
-	}
-	return hash.Sum(result), nil
-}
-
 func fileVisited(path string, f os.FileInfo, err error) error {
 	if err != nil {
 		log.Print(err)
@@ -47,7 +33,7 @@ func fileVisited(path string, f os.FileInfo, err error) error {
 		return nil
 	}
 	fmt.Printf("%s calculating hash: ", path)
-	hash, _ := getHash(path)
+	hash, _ := duptools.GetHash(path)
 	fmt.Printf("%x\n", hash)
 	var hashArray [sha256.Size]byte
 	copy(hashArray[:], hash)
