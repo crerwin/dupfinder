@@ -46,3 +46,23 @@ func addHash(fc *FileCollection, path string) bool {
 		return false
 	}
 }
+
+func getNameDups(fc *FileCollection) []string {
+	var nameDups []string
+	for _, paths := range fc.filesByName {
+		if len(paths) > 1 {
+			nameDups = append(nameDups, paths...)
+		}
+	}
+	return nameDups
+}
+
+func getHashDups(fc *FileCollection) []string {
+	var hashDups []string
+	for _, paths := range fc.filesByHash {
+		if len(paths) > 1 {
+			hashDups = append(hashDups, paths...)
+		}
+	}
+	return hashDups
+}

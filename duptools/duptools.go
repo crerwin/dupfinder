@@ -14,6 +14,14 @@ var fileCollection = newFileCollection()
 func FindDups(path string) {
 	// exposed function
 	inventoryFilesByName(path)
+	nameDups := getNameDups(fileCollection)
+	for _, path := range nameDups {
+		fmt.Println("namedupe: ", path)
+	}
+	hashDups := getHashDups(fileCollection)
+	for _, path := range hashDups {
+		fmt.Println("hashdups: ", path)
+	}
 }
 
 func inventoryFilesByName(path string) {
@@ -44,10 +52,6 @@ func fileVisited(path string, info os.FileInfo, err error) error {
 	}
 
 	return nil
-}
-
-func hashPossibleDups() {
-
 }
 
 func getHash(filePath string) ([]byte, error) {
