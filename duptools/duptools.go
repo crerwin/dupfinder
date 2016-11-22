@@ -39,19 +39,11 @@ func fileVisited(path string, info os.FileInfo, err error) error {
 		fmt.Println(path, " is a possible duplicate.")
 	}
 
-	return nil
+	if AddHash(fileCollection, path) {
+		fmt.Println(path, " is a duplicate file.")
+	}
 
-	// fmt.Printf("%s calculating hash: ", path)
-	// hash, _ := getHash(path)
-	// fmt.Printf("%x\n", hash)
-	// var hashArray [sha256.Size]byte
-	// copy(hashArray[:], hash)
-	// if p, ok := filesByHash[hashArray]; ok {
-	// 	fmt.Printf("%q is a duplicate of %q\n", info.Name(), p)
-	// } else {
-	// 	filesByHash[hashArray] = path
-	// }
-	// return nil
+	return nil
 }
 
 func hashPossibleDups() {

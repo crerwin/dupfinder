@@ -1,6 +1,9 @@
 package duptools
 
-import "crypto/sha256"
+import (
+	"crypto/sha256"
+	"fmt"
+)
 
 type FileCollection struct {
 	filesByName map[string][]string            // key: filename value: full path
@@ -20,6 +23,24 @@ func AddName(fc *FileCollection, path string, filename string) bool {
 	// file (or many files) with that name, otherwise return false
 	fc.filesByName[filename] = append(fc.filesByName[filename], path)
 	if len(fc.filesByName[filename]) > 1 {
+		return true
+	} else {
+		return false
+	}
+}
+
+func AddHash(fc *FileCollection, path string) bool {
+	// add file keyed on its hash to filesByHash and return True if
+	// there's already a file (or many files) with that hash, otherwise
+	// return false
+	fmt.Print("hashing ", path, ": ")
+	hash, _ := getHash(path)
+	fmt.Printf("%x\n", hash)
+	var hashArray [sha256.Size]byte
+	copy(hashArray[:], hash)
+
+	fc.filesByHash[hashArray] = append(fc.filesByHash[hashArray], path)
+	if len(fc.filesByHash[hashArray]) > 1 {
 		return true
 	} else {
 		return false
