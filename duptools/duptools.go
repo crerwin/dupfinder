@@ -35,18 +35,12 @@ func fileVisited(path string, info os.FileInfo, err error) error {
 		return nil
 	}
 
-	if CheckName(fileCollection, path, info.Name()) {
+	if AddName(fileCollection, path, info.Name()) {
 		fmt.Println(path, " is a possible duplicate.")
 	}
 
 	return nil
 
-	// if p, ok := fileCollection.filesByName[info.Name()]; ok {
-	// 	fmt.Println(path, " is a possible duplicate of ", p)
-	// } else {
-	// 	fileCollection.filesByName[info.Name()] = path
-	// }
-	// return nil
 	// fmt.Printf("%s calculating hash: ", path)
 	// hash, _ := getHash(path)
 	// fmt.Printf("%x\n", hash)
