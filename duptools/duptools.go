@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 )
 
-var fileCollection = NewFileCollection()
+var fileCollection = newFileCollection()
 
 func FindDups(path string) {
 	// exposed function
@@ -35,11 +35,11 @@ func fileVisited(path string, info os.FileInfo, err error) error {
 		return nil
 	}
 
-	if AddName(fileCollection, path, info.Name()) {
+	if addName(fileCollection, path, info.Name()) {
 		fmt.Println(path, " is a possible duplicate.")
 	}
 
-	if AddHash(fileCollection, path) {
+	if addHash(fileCollection, path) {
 		fmt.Println(path, " is a duplicate file.")
 	}
 

@@ -10,7 +10,7 @@ type FileCollection struct {
 	filesByHash map[[sha256.Size]byte][]string // key: hash value: full path
 }
 
-func NewFileCollection() *FileCollection {
+func newFileCollection() *FileCollection {
 	// use to create a new FileCollection and build the maps
 	var fc FileCollection
 	fc.filesByName = make(map[string][]string)
@@ -18,7 +18,7 @@ func NewFileCollection() *FileCollection {
 	return &fc
 }
 
-func AddName(fc *FileCollection, path string, filename string) bool {
+func addName(fc *FileCollection, path string, filename string) bool {
 	// add file to filesByName and return True if there's already a
 	// file (or many files) with that name, otherwise return false
 	fc.filesByName[filename] = append(fc.filesByName[filename], path)
@@ -29,7 +29,7 @@ func AddName(fc *FileCollection, path string, filename string) bool {
 	}
 }
 
-func AddHash(fc *FileCollection, path string) bool {
+func addHash(fc *FileCollection, path string) bool {
 	// add file keyed on its hash to filesByHash and return True if
 	// there's already a file (or many files) with that hash, otherwise
 	// return false
