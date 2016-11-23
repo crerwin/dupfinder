@@ -66,3 +66,11 @@ func getHashDups(fc *FileCollection) []string {
 	}
 	return hashDups
 }
+
+func getFileCount(fc *FileCollection) int {
+	var count int
+	for _, paths := range fc.filesByName {
+		count += len(paths)
+	}
+	return count
+}
